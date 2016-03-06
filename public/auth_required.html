@@ -8,14 +8,57 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
   <style type="text/css">
     #older_messages {
+      margin-top: 20px;
       cursor: pointer;
+      border: 1px #DDDDDD solid;
+      border-radius: 4px;
+      padding: 10px;
+      width: 300px;
+      text-align: center;
+    }
+    body {
+      margin: 0;
+      padding: 0px;
+    }
+    header {
+      background-color: #ffffff;
+      border-bottom: 2px #DDDDDD solid;
+      text-align: right;
+      height: 40px;
+    }
+    header a {
+      display: inline-block;
+      height: 40px;
+      padding: 10px;
+      text-decoration: none;
+    }
+    .content {
+      padding: 20px 10px;
+    }
+    #main {
+      width: 640px;
+      margin: 0 auto;
+    }
+    #messageInput {
+      width: 100%;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-size: 16px;
     }
   </style>
 </head>
 <body>
-  <input type='text' id='messageInput' placeholder='Message'>
-  <div id='messagesDiv'></div>
-  <div id='older_messages'>More</div>
+  <header>
+    <a href="#" id="logout">ログアウト</a>
+  </header>
+  <div class="content">
+    <div id="main">
+      <input type='text' id='messageInput' placeholder='Message'>
+      <div id='messagesDiv'></div>
+      <div id='older_messages'>More</div>
+    </div>
+  </div>
   <script>
     function Messages(messagesRef) {
       this.lastPriority = null;
@@ -51,6 +94,17 @@
     if (!auth) {
       location.href = "login.html";
     }
+
+    $("#logout").on("click", function() {
+      ref.unauth();
+    });
+
+    ref.onAuth(function(auth) {
+      if (auth == null) {
+        // user logged out
+        location.href = "login.html";
+      }
+    });
 
     ref.child("users/" + auth.uid).once("value").then(function(snapshot) {
       var user = snapshot.val()
@@ -101,6 +155,7 @@
       $('<div/>').text(text).prepend($('<b/>').text(name+': ')).prependTo($('#messagesDiv'));
       $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
     }
+
   </script>
 </body>
 </html>

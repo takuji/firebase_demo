@@ -31,16 +31,10 @@
       return false;
     }
     var ref = new Firebase("https://wiiu.firebaseio.com");
-    ref.createUser({email: email, password: password}, function(error, userData) {
-      if (error) {
-        console.log("Failed to create user:", error);
-        alert(error);
-      } else {
-        console.log("Succeeded to create user:", userData.uid);
-        setTimeout(function() {
-          location.href = "login.html";
-        })
-      }
+    ref.createUser({email: email, password: password}).then(function(userData) {
+      alert("Successfully registered!");
+    }, function(error) {
+      alert(error);
     });
     return false;
   });

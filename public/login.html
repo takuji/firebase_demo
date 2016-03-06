@@ -29,7 +29,8 @@
     ref.authWithPassword({email: email, password: password}).then(function(authData) {
       console.log("Succeeded to login:", authData);
       var name = authData.password.email.split("@")[0];
-      ref.child("users/" + authData.uid).set({id: authData.uid, name: name}).then(function(user) {
+      ref.child("users/" + authData.uid).set({id: authData.uid, name: name})
+      .then(function(user) {
         setTimeout(function() {
           location.href = "auth_required.html";
         }, 3000);
