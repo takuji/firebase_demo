@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Email Login</title>
+  <script src='https://cdn.firebase.com/js/client/2.4.1/firebase.js'></script>
+  <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+</head>
+<body>
+
+<h1>ユーザ登録</h1>
+
+<form id="user_registration_form">
+  メールアドレス:
+  <input type="text" id="email">
+  パスワード:
+  <input type="password" id="password">
+  <button>登録</button>
+</form>
+
+<div>
+  <a href="login.html">ログイン</a>
+</div>
+
+<script type="text/javascript">
+  $('#user_registration_form').on('submit', function() {
+    var email = $('#email').val();
+    var password = $('#password').val();
+    if (!email || !password) {
+      alert('メールアドレスとパスワードを入力してください');
+      return false;
+    }
+    var ref = new Firebase("https://wiiu.firebaseio.com");
+    ref.createUser({email: email, password: password}, function(error, userData) {
+      if (error) {
+        console.log("Failed to create user:", error);
+        alert(error);
+      } else {
+        console.log("Succeeded to create user:", userData.uid);
+        setTimeout(function() {
+          location.href = "login.html";
+        })
+      }
+    });
+    return false;
+  });
+</script>
+</body>
+</html>
