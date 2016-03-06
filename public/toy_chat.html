@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Chat</title>
+  <script src='https://cdn.firebase.com/js/client/2.4.1/firebase.js'></script>
+  <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
+</head>
+<body>
+  <div>
+    <input type='text' id='nameInput' placeholder='Name'>
+    <input type='text' id='messageInput' placeholder='Message'>
+  </div>
+  <div id='messagesDiv'></div>
+  <script>
+    var messagesRef = new Firebase('https://wiiu.firebaseio.com/toy_chat/messages');
+    $('#messageInput').keypress(function (e) {
+      if (e.keyCode == 13) {
+        var name = $('#nameInput').val();
+        var text = $('#messageInput').val();
+        messagesRef.push({name: name, text: text});
+        $('#messageInput').val('');
+      }
+    });
+    messagesRef.on('child_added', function(snapshot, prevChildKey) {
+      console.log('child_added ' + prevChildKey);
+      var message = snapshot.val();
+      prependChatMessage(message.name, message.text);
+    });
+    messagesRef.on('child_changed', function(snapshot) {
+      console.log('child_changed ' + snapshot.key());
+    });
+    messagesRef.on('child_moved', function(snapshot) {
+      console.log('child_moved');
+    });
+    messagesRef.on('child_removed', function(snapshot) {
+      console.log('child_removed');
+    });
+    messagesRef.on('value', function(snapshot) {
+      console.log('value');
+    });
+    function prependChatMessage(name, text) {
+      $('<div/>').text(text).prepend($('<b/>').text(name+': ')).prependTo($('#messagesDiv'));
+    }
+  </script>
+</body>
+</html>
