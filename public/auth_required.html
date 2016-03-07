@@ -50,6 +50,7 @@
 </head>
 <body>
   <header>
+    <span id="username"></span>
     <a href="#" id="logout">ログアウト</a>
   </header>
   <div class="content">
@@ -107,7 +108,9 @@
     });
 
     ref.child("users/" + auth.uid).once("value").then(function(snapshot) {
-      var user = snapshot.val()
+      var user = snapshot.val();
+
+      $("#username").text(user.name);
 
       var messagesRef = appRef.child("messages");
       messagesRef.orderByPriority().endAt(-Date.now()).on('child_added', function(snapshot, prevChildKey) {
